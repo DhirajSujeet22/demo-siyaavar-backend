@@ -1,32 +1,30 @@
 const jwt = require("jsonwebtoken");
 const userAuth = require("../model/auth_schema");
-console.log("something");
-//   ------------------------------------------------------------------
-const verifyToken = async (req, res) => {
+
+// ------------------------------------------------------------------
+
+const verifyToken = async (req, res, next) => {
   try {
-    console.log(req.cookies);
-    const token = await req.cookies.user_token;
+    const token = req.cookies.authToken;
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: Token required" });
     }
 
-    const VerifyToken = jwt.verify(token, process.env.AUTH_SECRET);
+    const { userID } = jwt.verify(token, process.env.AUTH_SECRET);
 
-    const rootUser = await userAuth.findOne({ email: VerifyToken.email });
+    const rootUser = await userAuth.findById(userID).select({ password: 0 });
 
     if (!rootUser) {
-      throw new Error("User Not Found");
+      return res.status(404).json({ message: "User not found" });
     }
 
-    req.token = token;
-    req.rootUser = rootUser;
-    req.userId = rootUser._id;
+    req.user = rootUser;
 
-    res.status(200).json({ message: "user found" });
+    next();
   } catch (error) {
-    console.log(error);
-    res.status(401).json({ msg: "Unauthorize User" });
+    console.error("JWT verification error:", error);
+    res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
 

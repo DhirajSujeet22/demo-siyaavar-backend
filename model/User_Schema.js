@@ -17,11 +17,11 @@ const indexSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    phone: {
-      type: String,
-      required: [true, "Phone number is required"],
-      trim: true,
-    },
+    // phone: {
+    //   type: String,
+    //   required: [true, "Phone number is required"],
+    //   trim: true,
+    // },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -30,4 +30,4 @@ const indexSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("userAuth", indexSchema);
+module.exports = mongoose.model("User", indexSchema);

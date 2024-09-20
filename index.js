@@ -4,6 +4,7 @@ require("dotenv").config();
 require("./Database/connection");
 const cors = require("cors");
 const router = require("./routes/auth_routers");
+const RouterProdcut = require("./routes/RouteProduct");
 const cookieParser = require("cookie-parser");
 // =================================
 
@@ -21,6 +22,7 @@ server.use(cookieParser());
 server.use(express.json());
 // =====================================
 
+server.use("/", RouterProdcut);
 server.use("/", router);
 
 // =====================================

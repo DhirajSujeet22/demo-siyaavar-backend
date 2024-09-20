@@ -4,7 +4,7 @@ require("dotenv").config();
 require("./Database/connection");
 const cors = require("cors");
 const router = require("./routes/auth_routers");
-const RouterProdcut = require("./routes/RouteProduct");
+const RouterProduct = require("./routes/RouteProduct");
 const cookieParser = require("cookie-parser");
 // =================================
 
@@ -22,9 +22,12 @@ server.use(cookieParser());
 server.use(express.json());
 // =====================================
 
-server.use("/", RouterProdcut);
-server.use("/", router);
+server.use("/api", RouterProduct);
+server.use("/api", router);
 
+server.get("/", (req, res) => {
+  res.status(200).json({ message: "Running..." });
+});
 // =====================================
 
 server.listen(process.env.PORT, () => {

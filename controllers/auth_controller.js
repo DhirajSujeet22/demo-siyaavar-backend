@@ -53,6 +53,7 @@ exports.signUpUser = async (req, res) => {
   }
 };
 
+
 // -------------------------------------------------------
 
 exports.loginUser = async (req, res) => {

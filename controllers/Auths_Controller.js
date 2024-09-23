@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 
 exports.signUpUser = async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { name, email, password } = req.body;
 
     console.log(req.body);
 
-    if (!name || !email || !password || !phone) {
+    if (!name || !email || !password) {
       return res
         .status(400)
         .json({ message: "Please fill in all required fields" });
@@ -28,7 +28,6 @@ exports.signUpUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone,
     });
 
     const savedUser = await newUser.save();
@@ -52,7 +51,6 @@ exports.signUpUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 // -------------------------------------------------------
 

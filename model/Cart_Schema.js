@@ -9,15 +9,13 @@ const CartSchema = new Schema(
     },
 
     product: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
+      type: {},
       required: true,
     },
 
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
   },
   { timestamps: true }

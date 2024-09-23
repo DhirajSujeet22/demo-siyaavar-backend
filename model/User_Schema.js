@@ -17,6 +17,11 @@ const indexSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+
+    addresses: {
+      type: [Schema.Types.Mixed],
+    },
+
     // phone: {
     //   type: String,
     //   required: [true, "Phone number is required"],

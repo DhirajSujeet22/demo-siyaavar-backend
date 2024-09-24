@@ -57,7 +57,6 @@ exports.signUpUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const userInfo = req.user;
 
     if (!email || !password) {
       return res
@@ -75,9 +74,54 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.status(200).json({ message: "Login successful", userInfo });
+    const token = jwt.sign({ userID: user.id }, process.env.AUTH_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60, // 1-hour cookie expiration
+      // sameSite: "lax",
+    };
+
+    res.cookie("authToken", token, cookieOptions);
+
+    res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.checkAuth = async (req, res) => {
+  console.log(req.user);
+  if (req.user) {
+    res.status(200).json(req.user);
+  } else {
+    res.status(401).json("Unauthorize");
+  }
+};
+
+exports.logOutUser = async (req, res) => {
+  try {
+    // const user = req.user;
+    // if (!user) {
+    //   return res.status(401).json("Unauthorize");
+    // }
+
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60,
+      // sameSite: "lax",
+    });
+
+    console.log("done");
+
+    res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
   }
 };

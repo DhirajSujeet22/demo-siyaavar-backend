@@ -5,12 +5,13 @@ const {
   updateCarts,
   deleteCarts,
 } = require("../controllers/Cart_Controller");
+const verifyToken = require("../Middlewares/authMiddleware");
 
 // =========================================================
 
 router
-  .get("/", fetchCartsByUser)
-  .post("/", addToCarts)
+  .get("/", verifyToken, fetchCartsByUser)
+  .post("/", verifyToken, addToCarts)
   .patch("/:id", updateCarts)
   .delete("/:id", deleteCarts);
 

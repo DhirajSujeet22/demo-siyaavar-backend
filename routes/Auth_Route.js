@@ -12,9 +12,9 @@ const {
 
 router
   .get("/check", verifyToken, checkAuth)
+  .get("/logout", verifyToken, logOutUser)
   .post("/signup", signUpUser)
-  .post("/login", loginUser)
-  .post("/logout", logOutUser);
+  .post("/login", loginUser);
 
 // ------------------------
 

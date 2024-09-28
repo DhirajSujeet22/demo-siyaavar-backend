@@ -84,7 +84,6 @@ exports.fetchAllProduct = async (req, res) => {
 
   // this is use for calculate all Product in database
   const totalDocs = await Product.countDocuments(query);
-  console.log(totalDocs);
 
   // pagination functionality
 
@@ -109,7 +108,6 @@ exports.fetchAllProduct = async (req, res) => {
 
 exports.fetchProductById = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   try {
     const productById = await Product.findById(id);

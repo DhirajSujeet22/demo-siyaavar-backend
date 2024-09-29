@@ -48,6 +48,7 @@ exports.fetchAllProduct = async (req, res) => {
 
   let query = Product.find({});
 
+  console.log(category);
   // searching functionality
 
   if (_search) {
@@ -66,8 +67,12 @@ exports.fetchAllProduct = async (req, res) => {
 
   // category functionality
 
+  // if (category) {
+  //   query = query.find({ category: category.split(",") });
+  // }
+
   if (category) {
-    query = query.find({ category: category.split(",") });
+    query = query.find({ category: category });
   }
 
   // brand functionality
@@ -98,6 +103,7 @@ exports.fetchAllProduct = async (req, res) => {
 
   try {
     const allProduct = await query;
+    console.log(allProduct);
     res.set("X-Total-Count", totalDocs), res.status(200).json(allProduct);
   } catch (error) {
     res.status(400).json(error);

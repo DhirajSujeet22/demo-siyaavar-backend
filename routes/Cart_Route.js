@@ -12,7 +12,7 @@ const verifyToken = require("../Middlewares/authMiddleware");
 router
   .get("/", verifyToken, fetchCartsByUser)
   .post("/", verifyToken, addToCarts)
-  .patch("/:id", updateCarts)
-  .delete("/:id", deleteCarts);
+  .patch("/:id", verifyToken, updateCarts)
+  .delete("/:id", verifyToken, deleteCarts);
 
 module.exports = router;

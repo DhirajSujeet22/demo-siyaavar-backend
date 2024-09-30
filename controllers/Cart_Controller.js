@@ -3,7 +3,6 @@ const Carts = require("../model/Cart_Schema");
 // ================================================
 
 exports.addToCarts = async (req, res) => {
-  
   try {
     const { id } = req.user;
     const carts = await new Carts({ ...req.body, user: id }).save();

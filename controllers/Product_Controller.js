@@ -46,11 +46,9 @@ const Product = require("../model/Product_Schema");
 exports.fetchAllProduct = async (req, res) => {
   const { _search, category, brand, _sort, _order, _page, _limit } = req.query;
 
-  let query = Product.find({});
+  let query = Product.find({}); // Initialize the query object
 
-  console.log(category);
-  // searching functionality
-
+  // Searching functionality
   if (_search) {
     const searchValues = _search
       .split(" ")
@@ -65,33 +63,45 @@ exports.fetchAllProduct = async (req, res) => {
     query = query.find({ $and: searchFilters });
   }
 
-  // category functionality
+  // -----------------------------------------------
 
-  // if (category) {
-  //   query = query.find({ category: category.split(",") });
-  // }
+  // Category functionality
 
   if (category) {
-    query = query.find({ category: category });
+    const categoryFilters = category.split(",").map((catName) => ({
+      category: { $regex: new RegExp(catName.trim(), "i") },
+    }));
+
+    query = query.find({ $or: categoryFilters });
   }
 
-  // brand functionality
+  // -----------------------------------------------
 
+  // Brand functionality
   if (brand) {
-    query = query.find({ brand: brand.split(",") });
+    const brandFilters = brand.split(",").map((brandName) => ({
+      brand: { $regex: new RegExp(brandName.trim(), "i") },
+    }));
+
+    query = query.find({ $or: brandFilters });
   }
 
-  // sorting functionality
+  // -----------------------------------------------
 
+  // Sorting functionality
   if (_sort && _order) {
-    query = query.sort({ [_sort]: _order });
+    const sortOrder = _order.toLowerCase() === "desc" ? -1 : 1;
+    query = query.sort({ [_sort]: sortOrder });
   }
 
-  // this is use for calculate all Product in database
-  const totalDocs = await Product.countDocuments(query);
+  // -----------------------------------------------
 
-  // pagination functionality
+  const totalDocs = await Product.countDocuments(query.getFilter());
+  // Use `getFilter()` to get the current query condition
 
+  // -----------------------------------------------
+
+  // Pagination functionality
   if (_page && _limit) {
     const Page = Number(_page);
     const PageSize = Number(_limit);
@@ -99,11 +109,10 @@ exports.fetchAllProduct = async (req, res) => {
     query = query.skip(Skip).limit(PageSize);
   }
 
-  // ==========================================
+  // -----------------------------------------------
 
   try {
     const allProduct = await query;
-    console.log(allProduct);
     res.set("X-Total-Count", totalDocs), res.status(200).json(allProduct);
   } catch (error) {
     res.status(400).json(error);
